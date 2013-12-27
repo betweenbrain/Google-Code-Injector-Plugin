@@ -37,7 +37,8 @@ class plgSystemGooglecodeinjector extends JPlugin
 
 		$query = 'SELECT *
 			FROM ' . $this->db->nameQuote('#__google_codes') . '
-			WHERE url IN (\'' . implode('\',\'', $matches) . '\')';
+			WHERE url IN (\'' . implode('\',\'', $matches) . '\')
+			AND published = 1';
 		$this->db->setQuery($query);
 		$rows = $this->db->loadObjectList();
 
@@ -86,7 +87,9 @@ class plgSystemGooglecodeinjector extends JPlugin
 	 */
 	private function matchRow($matches, $rows)
 	{
+		$now            = JFactory::getDate()->toUnix();
 		$reverseMatches = array_reverse($matches);
+		$tzoffset       = $this->config->getValue('config.offset');
 
 		foreach ($reverseMatches as $reverseMatch)
 		{
@@ -94,9 +97,16 @@ class plgSystemGooglecodeinjector extends JPlugin
 			{
 				if ($reverseMatch == $row->url)
 				{
-					return $row->code;
+					$publish_up   = ($row->publish_up === '') ? 0 : JFactory::getDate($row->publish_up, $tzoffset)->toUnix();
+					$publish_down = ($row->publish_down === '') ? $now + 1 : JFactory::getDate($row->publish_down, $tzoffset)->toUnix();
+
+					if ($publish_up <= $now && $now < $publish_down)
+					{
+						return $row->code;
+					}
 				}
 			}
 		}
 	}
+
 }
