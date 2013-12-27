@@ -41,7 +41,7 @@ class plgSystemGooglecodeinjector extends JPlugin
 		$this->db->setQuery($query);
 		$rows = $this->db->loadObjectList();
 
-		$code = $this->matchRows($matches, $rows);
+		$code = $this->matchRow($matches, $rows);
 
 		$buffer = '<pre style="background:white">' . print_r($code, true) . '<br/>' . $this->root . '</pre>' . $buffer;
 
@@ -84,7 +84,7 @@ class plgSystemGooglecodeinjector extends JPlugin
 	 *
 	 * @return mixed
 	 */
-	private function matchRows($matches, $rows)
+	private function matchRow($matches, $rows)
 	{
 		$reverseMatches = array_reverse($matches);
 
