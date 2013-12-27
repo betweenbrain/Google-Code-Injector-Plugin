@@ -54,19 +54,23 @@ class plgSystemGooglecodeinjector extends JPlugin
 		$rows = $this->db->loadObjectList();
 		$code = $this->matchRows($matches, $rows);
 
-		$buffer = '<pre style="background:white">' . print_r($matches, true) . '<br/>' . $this->root . '</pre>' . $buffer;
+		$buffer = '<pre style="background:white">' . print_r($code, true) . '<br/>' . $this->root . '</pre>' . $buffer;
 
 		JResponse::setBody($buffer);
 
 		return true;
 	}
 
-	private function matchRows($matches, $rows) {
+	private function matchRows($matches, $rows)
+	{
 		$reverseMatches = array_reverse($matches);
 
-		foreach ($reverseMatches as $reverseMatch) {
-			foreach ($rows as $row) {
-				if ($reverseMatch == $row->url) {
+		foreach ($reverseMatches as $reverseMatch)
+		{
+			foreach ($rows as $row)
+			{
+				if ($reverseMatch == $row->url)
+				{
 					return $row->code;
 				}
 			}
