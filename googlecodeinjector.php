@@ -32,11 +32,36 @@ class plgSystemGooglecodeinjector extends JPlugin
 			return true;
 		}
 
-		$buffer     = JResponse::getBody();
+		$buffer  = JResponse::getBody();
+		$matches = $this->createMatches();
+
+		$query = 'SELECT *
+			FROM ' . $this->db->nameQuote('#__google_codes') . '
+			WHERE url IN (\'' . implode('\',\'', $matches) . '\')';
+		$this->db->setQuery($query);
+		$rows = $this->db->loadObjectList();
+
+		$code = $this->matchRows($matches, $rows);
+
+		$buffer = '<pre style="background:white">' . print_r($code, true) . '<br/>' . $this->root . '</pre>' . $buffer;
+
+		JResponse::setBody($buffer);
+
+		return true;
+	}
+
+	/**
+	 * Create array of possible URL patterns to match
+	 *
+	 * @return array
+	 */
+	private function createMatches()
+	{
 		$currentUri = $this->uri->toString(array('scheme', 'host', 'path'));
 		$segments   = explode('/', str_replace($this->root, '', $currentUri));
-		$matches[]  = $this->root . '*';
-		$match      = null;
+
+		$matches[] = $this->root . '*';
+		$match     = null;
 
 		foreach ($segments as $segment)
 		{
@@ -46,19 +71,7 @@ class plgSystemGooglecodeinjector extends JPlugin
 
 		$matches[] = $currentUri;
 
-		$query = 'SELECT *
-			FROM ' . $this->db->nameQuote('#__google_codes') . '
-			WHERE url IN (\'' . implode('\',\'', $matches) . '\')';
-
-		$this->db->setQuery($query);
-		$rows = $this->db->loadObjectList();
-		$code = $this->matchRows($matches, $rows);
-
-		$buffer = '<pre style="background:white">' . print_r($code, true) . '<br/>' . $this->root . '</pre>' . $buffer;
-
-		JResponse::setBody($buffer);
-
-		return true;
+		return $matches;
 	}
 
 	/**
