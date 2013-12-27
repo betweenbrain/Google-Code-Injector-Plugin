@@ -44,7 +44,10 @@ class plgSystemGooglecodeinjector extends JPlugin
 
 		$code = $this->matchRow($matches, $rows);
 
-		$buffer = '<pre style="background:white">' . print_r($code, true) . '<br/>' . $this->root . '</pre>' . $buffer;
+		if ($code)
+		{
+			$buffer = '<pre style="background:white">' . print_r($code, true) . '</pre>' . $buffer;
+		}
 
 		JResponse::setBody($buffer);
 
