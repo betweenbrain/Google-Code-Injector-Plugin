@@ -18,6 +18,7 @@ class plgSystemGooglecodeinjector extends JPlugin
 	{
 		parent::__construct($subject, $config);
 		$this->app  = JFactory::getApplication();
+		$this->db   = JFactory::getDbo();
 		$this->doc  = JFactory::getDocument();
 		$this->root = JURI::root();
 		$this->uri  = JURI::getInstance();
@@ -44,6 +45,13 @@ class plgSystemGooglecodeinjector extends JPlugin
 		}
 
 		$matches[] = $currentUri;
+
+		$query = 'SELECT *
+			FROM ' . $this->db->nameQuote('#__google_codes') . '
+			WHERE url IN (\'' . implode('\',\'', $matches) . '\')';
+
+		$this->db->setQuery($query);
+		$rows = $this->db->loadObjectList();
 
 		$buffer = '<pre style="background:white">' . print_r($matches, true) . '<br/>' . $this->root . '</pre>' . $buffer;
 
