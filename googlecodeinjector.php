@@ -52,11 +52,24 @@ class plgSystemGooglecodeinjector extends JPlugin
 
 		$this->db->setQuery($query);
 		$rows = $this->db->loadObjectList();
+		$code = $this->matchRows($matches, $rows);
 
 		$buffer = '<pre style="background:white">' . print_r($matches, true) . '<br/>' . $this->root . '</pre>' . $buffer;
 
 		JResponse::setBody($buffer);
 
 		return true;
+	}
+
+	private function matchRows($matches, $rows) {
+		$reverseMatches = array_reverse($matches);
+
+		foreach ($reverseMatches as $reverseMatch) {
+			foreach ($rows as $row) {
+				if ($reverseMatch == $row->url) {
+					return $row->code;
+				}
+			}
+		}
 	}
 }
