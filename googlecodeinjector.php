@@ -61,6 +61,16 @@ class plgSystemGooglecodeinjector extends JPlugin
 		return true;
 	}
 
+	/**
+	 * Matches possible URL patterns with rows returned from database.
+	 *
+	 * Begins checking with current URL first, working backwards
+	 *
+	 * @param $matches
+	 * @param $rows
+	 *
+	 * @return mixed
+	 */
 	private function matchRows($matches, $rows)
 	{
 		$reverseMatches = array_reverse($matches);
