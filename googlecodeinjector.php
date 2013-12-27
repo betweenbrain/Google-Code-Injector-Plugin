@@ -87,20 +87,25 @@ class plgSystemGooglecodeinjector extends JPlugin
 	 */
 	private function matchRow($matches, $rows)
 	{
+		$config         = JFactory::getConfig();
 		$now            = JFactory::getDate()->toUnix();
 		$reverseMatches = array_reverse($matches);
-		$tzoffset       = $this->config->getValue('config.offset');
+		$tzoffset       = $config->getValue('config.offset');
 
 		foreach ($reverseMatches as $reverseMatch)
 		{
 			foreach ($rows as $row)
 			{
-				if ($reverseMatch == $row->url)
-				{
-					$publish_up   = ($row->publish_up === '') ? 0 : JFactory::getDate($row->publish_up, $tzoffset)->toUnix();
-					$publish_down = ($row->publish_down === '') ? $now + 1 : JFactory::getDate($row->publish_down, $tzoffset)->toUnix();
+				$publish_up   = ($row->publish_up === '0000-00-00 00:00:00') ? 0 : JFactory::getDate($row->publish_up, $tzoffset)->toUnix();
+				$publish_down = ($row->publish_down === '0000-00-00 00:00:00') ? $now + 1 : JFactory::getDate($row->publish_down, $tzoffset)->toUnix();
 
-					if ($publish_up <= $now && $now < $publish_down)
+				if ($publish_up <= $now && $now < $publish_down)
+				{
+					if ($reverseMatch == $row->url)
+					{
+						return $row->code;
+					}
+					elseif (strpos($row->url, $reverseMatch))
 					{
 						return $row->code;
 					}
