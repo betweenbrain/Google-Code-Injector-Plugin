@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die;
 
 /**
- * File       googlecodeinjector.php
+ * File       pagecodeinjector.php
  * Created    12/26/13 2:19 PM
  * Author     Matt Thomas | matt@betweenbrain.com | http://betweenbrain.com
  * Support    https://github.com/betweenbrain/
@@ -11,10 +11,10 @@
 
 jimport('joomla.plugin.plugin');
 
-class plgSystemGooglecodeinjector extends JPlugin
+class plgSystemPagecodeinjector extends JPlugin
 {
 
-	function plgSystemGooglecodeinjector(&$subject, $config)
+	function plgSystemPagecodeinjector(&$subject, $config)
 	{
 		parent::__construct($subject, $config);
 		$this->app  = JFactory::getApplication();
@@ -36,7 +36,7 @@ class plgSystemGooglecodeinjector extends JPlugin
 		$matches = $this->createMatches();
 
 		$query = 'SELECT *
-			FROM ' . $this->db->nameQuote('#__google_codes') . '
+			FROM ' . $this->db->nameQuote('#__page_code_urls') . '
 			WHERE url IN (\'' . implode('\',\'', $matches) . '\')
 			AND published = 1';
 		$this->db->setQuery($query);
