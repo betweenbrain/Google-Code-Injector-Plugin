@@ -34,7 +34,7 @@ class plgSystemPagecodeinjector extends JPlugin
 
 		$buffer  = JResponse::getBody();
 		$matches = $this->createMatches();
-		$query   = ' SELECT urls.url as url, urls.published as published, urls.publish_up as publish_up, urls.publish_down as publish_down, types.code as code'
+		$query   = ' SELECT urls.url as url, urls.published as published, types.publish_up as publish_up, types.publish_down as publish_down, types.code as code'
 			. ' FROM #__page_code_urls as urls'
 			. ' LEFT JOIN #__page_code_types as types'
 			. ' ON types.id = urls.typeId'
