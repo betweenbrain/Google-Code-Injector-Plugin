@@ -34,24 +34,24 @@ class plgSystemPagecodeinjector extends JPlugin
 
 		$buffer  = JResponse::getBody();
 		$matches = $this->createMatches();
-
-		$query = 'SELECT *
-			FROM ' . $this->db->nameQuote('#__page_code_urls') . '
-			WHERE url IN (\'' . implode('\',\'', $matches) . '\')
-			AND published = 1';
+		$query   = ' SELECT urls.url as url, urls.published as published, urls.publish_up as publish_up, urls.publish_down as publish_down, types.code as code'
+			. ' FROM #__page_code_urls as urls'
+			. ' LEFT JOIN #__page_code_types as types'
+			. ' ON types.id = urls.typeId'
+			. ' WHERE url IN (\'' . implode('\',\'', $matches) . '\')'
+			. ' AND urls.published = 1';
 		$this->db->setQuery($query);
 		$rows = $this->db->loadObjectList();
-
 		$code = $this->matchRow($matches, $rows);
 
 		if ($code)
 		{
-			$buffer = '<pre style="background:white">' . print_r($code, true) . '</pre>' . $buffer;
+			$replacement = '<script>' . $code . '</script>';
+			$buffer      = str_replace('</body>', $replacement, $buffer);
+			JResponse::setBody($buffer);
+
+			return true;
 		}
-
-		JResponse::setBody($buffer);
-
-		return true;
 	}
 
 	/**
