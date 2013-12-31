@@ -46,7 +46,7 @@ class plgSystemPagecodeinjector extends JPlugin
 
 		if ($code)
 		{
-			$replacement = '<script>' . $code . '</script>';
+			$replacement = '<script>' . $code . '</script>' . "\n" . '</body>';
 			$buffer      = str_replace('</body>', $replacement, $buffer);
 			JResponse::setBody($buffer);
 
