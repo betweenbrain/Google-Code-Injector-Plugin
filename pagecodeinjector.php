@@ -34,12 +34,13 @@ class plgSystemPagecodeinjector extends JPlugin
 
 		$buffer  = JResponse::getBody();
 		$matches = $this->createMatches();
-		$query   = ' SELECT pages.url as url, pages.published as published, codes.publish_up as publish_up, codes.publish_down as publish_down, codes.code as code'
+		$query   = ' SELECT pages.url as url, codes.publish_up as publish_up, codes.publish_down as publish_down, codes.code as code'
 			. ' FROM #__page_code_pages as pages'
 			. ' LEFT JOIN #__page_code_codes as codes'
 			. ' ON codes.id = pages.codeId'
 			. ' WHERE url IN (\'' . implode('\',\'', $matches) . '\')'
-			. ' AND pages.published = 1';
+			. ' AND pages.published = 1'
+			. ' AND codes.published = 1';
 		$this->db->setQuery($query);
 		$rows = $this->db->loadObjectList();
 		$code = $this->matchRow($matches, $rows);
